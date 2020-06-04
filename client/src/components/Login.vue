@@ -6,7 +6,7 @@
 
           <v-toolbar color="primary" dark>
             <v-toolbar-title>
-              Register
+              Log in
             </v-toolbar-title>
           </v-toolbar>
 
@@ -36,7 +36,7 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn @click="register"
+            <v-btn @click="login"
             color="primary">Register</v-btn>
           </v-card-actions>
 
@@ -47,33 +47,21 @@
 </template>
 
 <script>
-import AuthenticationService from '@/services/AuthenticationService.js'
 export default {
   data () {
     return {
-      email: 'email',
-      password: 'password',
+      email: null,
+      password: null,
       error: null
     }
   },
   methods: {
-    async register () {
-      try {
-        await AuthenticationService.register({
-          email: this.email,
-          password: this.password
-        })
-      } catch (error) {
-        this.error = error.response.data.error
-      }
+    async login () {
+      console.log('login')
     }
   }
 }
 </script>
 
 <style scoped>
-.v-card__title {
-  background-color: darkblue;
-  color: white;
-}
 </style>
