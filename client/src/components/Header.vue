@@ -12,17 +12,12 @@
       </span>
     </v-toolbar-title>
 
-    <v-toolbar-items>
-      <v-btn depressed color="primary">
-        Browse
-      </v-btn>
-    </v-toolbar-items>
-
     <v-spacer></v-spacer>
 
     <v-toolbar-items>
 
       <v-btn
+      v-if="!checkToken"
       to="register"
       depressed
       color="primary">
@@ -30,10 +25,20 @@
       </v-btn>
 
       <v-btn
+      v-if="!checkToken"
       to="login"
       depressed
       color="primary">
-        Log in
+        Login
+      </v-btn>
+
+      <v-btn
+      v-if="checkToken"
+      @click="logout"
+      to="root"
+      depressed
+      color="primary">
+        Logout
       </v-btn>
 
     </v-toolbar-items>
@@ -46,6 +51,18 @@ export default {
   methods: {
     navigateTo (route) {
       this.$router.push(route)
+    },
+    async logout () {
+      try {
+        this.$store.dispatch('logout')
+      } catch (error) {
+        this.error = error.response.data.error
+      }
+    }
+  },
+  computed: {
+    checkToken: function () {
+      return this.$store.state.token != null
     }
   }
 }
