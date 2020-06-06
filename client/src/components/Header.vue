@@ -35,7 +35,6 @@
       <v-btn
       v-if="checkToken"
       @click="logout"
-      to="root"
       depressed
       color="primary">
         Logout
@@ -55,6 +54,7 @@ export default {
     async logout () {
       try {
         this.$store.dispatch('logout')
+        this.$router.push('root')
       } catch (error) {
         this.error = error.response.data.error
       }

@@ -1,8 +1,16 @@
 <template>
   <div id="app">
     <v-app>
-      <page-header></page-header>
-      <router-view></router-view>
+
+      <v-container
+      class="mb-5">
+        <page-header></page-header>
+      </v-container>
+
+      <v-container
+      class="pa-5">
+        <router-view></router-view>
+      </v-container>
     </v-app>
   </div>
 </template>

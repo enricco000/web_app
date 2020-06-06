@@ -1,7 +1,7 @@
 <template>
   <v-container class="fill-height">
-    <v-layout row wrap align-center>
-      <v-flex>
+    <v-row>
+      <v-col>
         <v-card
         hover>
 
@@ -15,33 +15,47 @@
 
             <v-form>
               <v-text-field
+              v-model="email"
               label="Email"
               name="email"
               text="email"
-              prepend-inner-icon="person"
-              v-model="email">
+              :rules="[rules.required]"
+              prepend-inner-icon="person">
               </v-text-field>
 
               <v-text-field
-              label="Password"
-              name="password"
-              text="password"
-              :type="'password'"
-              prepend-inner-icon="lock"
-              v-model="password">
-              </v-text-field>
+                v-model="password"
+                label="Password"
+                name="password"
+                :type="show ? 'text' : 'password'"
+                :rules="[rules.required]"
+                autocomplete="new-password"
+                :prepend-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:prepend-inner="show = !show">
+                </v-text-field>
             </v-form>
 
           </v-card-text>
 
           <v-card-actions>
-            <v-btn @click="login"
-            color="primary">Login</v-btn>
-          </v-card-actions>
+              <v-container>
+                <v-row
+                :align="'end'"
+                :justify="'end'">
+                  <v-btn
+                  :disabled="!enteredCredentials"
+                  @click="login"
+                  to="root"
+                  color="primary">
+                    Login
+                  </v-btn>
+                </v-row>
+              </v-container>
+            </v-card-actions>
 
         </v-card>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -50,9 +64,13 @@ import AuthenticationService from '@/services/AuthenticationService.js'
 export default {
   data () {
     return {
-      email: null,
-      password: null,
-      error: null
+      email: '',
+      password: '',
+      show: false,
+      error: null,
+      rules: {
+        required: value => !!value || 'Required'
+      }
     }
   },
   methods: {
@@ -68,6 +86,11 @@ export default {
       } catch (error) {
         this.error = error.response.data.error
       }
+    }
+  },
+  computed: {
+    enteredCredentials: function () {
+      return this.email !== '' && this.password !== ''
     }
   }
 }
