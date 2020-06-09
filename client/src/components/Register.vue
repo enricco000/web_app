@@ -22,7 +22,9 @@
                 :rules="[rules.required]"
                 autocomplete="new-email"
                 prepend-inner-icon="person"
-                v-model="email">
+                v-model="email"
+                v-mutate="() => onMutate('email')"
+                >
                 </v-text-field>
 
                 <v-text-field
@@ -42,7 +44,7 @@
                 label="Re-type password"
                 name="password"
                 :type="show2 ? 'text' : 'password'"
-                :rules="[rules.matchingPasswords]"
+                :rules="[rules.matchingPasswords, rules.min]"
                 autocomplete="new-password"
                 :prepend-inner-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                 @click:prepend-inner="show2 = !show2">
@@ -52,7 +54,11 @@
               <v-alert
               type="error"
               v-if="error"
-              v-html="error">
+              elevation=6
+              dismissible
+              class="text-left"
+              >
+                {{ error }}
               </v-alert>
 
               <v-snackbar
@@ -75,8 +81,8 @@
                 :align="'end'"
                 :justify="'end'">
                   <v-btn
-                  :disabled="!passwordsMatch"
-                  @click="register; snackbarRules.snackbar = true"
+                  :disabled="!passwordsMatch || error !== null"
+                  @click="register()"
                   color="primary"
                   >
                     Register
@@ -124,9 +130,13 @@ export default {
         this.$store.dispatch('setToken', response.data.token)
         this.$store.dispatch('setUser', response.data.user)
         this.error = null
+        this.snackbarRules.snackbar = true
       } catch (error) {
         this.error = error.response.data.error
       }
+    },
+    onMutate (email) {
+      this.error = null
     }
   },
   computed: {

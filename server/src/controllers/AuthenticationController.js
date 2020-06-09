@@ -1,6 +1,7 @@
 const {User} = require('../models')
 const jwt = require('jsonwebtoken')
 const config = require('../config/config')
+const bcrypt = require('bcryptjs')
 
 function jwtSignUser (user) {
     const ONE_WEEK = 60 * 60 * 24 * 7
@@ -20,6 +21,7 @@ module.exports = {
             })
         }
     },
+
     async login (req, res) {
         try {
             const {email, password} = req.body
@@ -33,18 +35,20 @@ module.exports = {
                     error: 'The login information is incorrect'
                 })
             }
-
-            const isPasswordValid = user.comparePassword(password)
-
-            if (!isPasswordValid) {
-                return res.status(403).send({
-                    error: 'The login information is incorrect'
-                })
-            }
-            const userJSON = user.toJSON()
-            res.send({
-                user: userJSON,
-                token: jwtSignUser(userJSON)
+            bcrypt.compare(password, user.password, function(err, response) {
+                if (err) {
+                    throw err
+                } else if (response === true) {
+                    const userJSON = user.toJSON()
+                    return res.send({
+                        user: userJSON,
+                        token: jwtSignUser(userJSON)
+                    })
+                } else {
+                    return res.status(403).send({
+                        error: 'The login information is incorrect'
+                    })
+                }
             })
         } catch (err) {
             res.status(500).send({

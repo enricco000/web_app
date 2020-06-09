@@ -19,7 +19,6 @@
                     <v-col>
 
                       <v-row>
-                        <!-- <v-container> -->
                           <v-list-item two-line>
                             <v-list-item-content>
                               <div class="overline mb-4 text-left">OVERLINE</div>
@@ -30,7 +29,6 @@
                                 </v-list-item-title>
                             </v-list-item-content>
                           </v-list-item>
-                        <!-- </v-container> -->
                       </v-row>
 
                       <v-row
@@ -43,7 +41,15 @@
 
                     </v-col>
                     <v-col>
-                      <v-btn>Button</v-btn>
+                      <v-row
+                      :align="'end'"
+                      :justify="'end'"
+                      >
+                        <v-btn
+                        class="mr-4">
+                          Button
+                        </v-btn>
+                      </v-row>
                     </v-col>
                   </v-row>
                 </v-container>

@@ -44,9 +44,9 @@
                 :justify="'end'">
                   <v-btn
                   :disabled="!enteredCredentials"
-                  @click="login"
-                  to="root"
-                  color="primary">
+                  @click="login()"
+                  color="primary"
+                  >
                     Login
                   </v-btn>
                 </v-row>
@@ -80,9 +80,11 @@ export default {
           email: this.email,
           password: this.password
         })
+        console.log(response)
         this.$store.dispatch('setToken', response.data.token)
         this.$store.dispatch('setUser', response.data.user)
         this.error = null
+        this.$router.push('/')
       } catch (error) {
         this.error = error.response.data.error
       }
