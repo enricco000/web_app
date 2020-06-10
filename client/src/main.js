@@ -23,7 +23,16 @@ new Vue({
   el: '#app',
   router,
   store,
-  vuetify: new Vuetify(),
+  vuetify: new Vuetify({
+    theme: {
+      themes: {
+        light: {
+          primary: '#5fc0be',
+          secondary: '#074847'
+        }
+      }
+    }
+  }),
   components: { App },
   template: '<App/>'
 })

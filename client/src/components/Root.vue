@@ -15,9 +15,11 @@
               </v-toolbar>
 
                 <v-container>
-                  <v-row>
-                    <v-col>
 
+                  <v-row>
+
+                    <v-col
+                    cols="6">
                       <v-row>
                           <v-list-item two-line>
                             <v-list-item-content>
@@ -36,21 +38,53 @@
                       align="start"
                       justify="start"
                       >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ut ante eu ipsum tincidunt accumsan nec eu arcu. Suspendisse potenti. Donec ut porttitor ante. Proin turpis libero, hendrerit quis lacus non, commodo convallis ipsum. Nam gravida lectus blandit massa convallis aliquet. Quisque laoreet massa ac convallis elementum. Quisque feugiat enim in lorem imperdiet mollis. Nunc auctor tempor eros, sit amet finibus odio luctus vel. Vestibulum molestie nulla id molestie tempus. Pellentesque bibendum nisi sit amet sapien rhoncus, sollicitudin gravida nisi mattis. Donec euismod leo vitae malesuada accumsan. Curabitur ac hendrerit nisl. Etiam gravida ex ac porta lobortis. Vivamus quis mi finibus, mattis felis a, ultricies metus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum porttitor et lectus pharetra maximus.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ut ante eu ipsum tincidunt accumsan nec eu arcu. Suspendisse potenti. Donec ut porttitor ante. Proin turpis libero, hendrerit quis lacus non, commodo convallis ipsum. Nam gravida lectus blandit massa convallis aliquet. Quisque laoreet massa ac convallis elementum. Quisque feugiat enim in lorem imperdiet mollis. Nunc auctor tempor eros, sit amet finibus odio luctus vel. Vestibulum molestie nulla id molestie tempus. Pellentesque bibendum nisi sit amet sapien rhoncus, sollicitudin gravida nisi mattis.
                       </v-row>
 
                     </v-col>
+
                     <v-col>
-                      <v-row
-                      :align="'end'"
-                      :justify="'end'"
-                      >
-                        <v-btn
-                        class="mr-4">
-                          Button
-                        </v-btn>
+                      <v-row>
+
+                        <v-col>
+                            <v-container>
+                              <v-row
+                              :align="'center'"
+                              :justify="'center'">
+                                <v-img
+                                class="ma-6"
+                                :src="logo"
+                                max-width="300">
+                                </v-img>
+                              </v-row>
+
+                                <v-row>
+                                  <v-col>
+                                    <v-row
+                                    :justify="'start'"
+                                    :align="'center'"
+                                    class="ml-2">
+                                      Veinte pesitos
+                                    </v-row>
+                                  </v-col>
+                                  <v-col>
+                                    <v-row
+                                    :justify="'end'"
+                                    :align="'center'"
+                                    class="mr-2">
+                                      <v-btn>
+                                        Comprar
+                                      </v-btn>
+                                    </v-row>
+                                  </v-col>
+                                </v-row>
+
+                            </v-container>
+                        </v-col>
+
                       </v-row>
                     </v-col>
+
                   </v-row>
                 </v-container>
 
@@ -65,7 +99,8 @@ export default {
   name: 'Root',
   data () {
     return {
-      cardTitle: 'Home for Vue.js App'
+      cardTitle: 'Home for Web App',
+      logo: require('@/assets/logo.png')
     }
   }
 }

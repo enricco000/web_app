@@ -1,36 +1,26 @@
 <template>
+  <v-container
+  fluid>
   <v-app-bar
-  fixed
+  :app=true
   dark
   color="primary">
 
-    <v-toolbar-title class="mr-4">
+    <v-app-bar-nav-icon @click="drawer = true; loginHide(); loginShow();"></v-app-bar-nav-icon>
+
+    <v-toolbar-title
+    v-ripple>
       <span
       class="home"
-      @click="navigateTo({name: 'root'})">
-        Toolbar
+      @click="navigateTo('/')"
+      >
+      Toolbar
       </span>
     </v-toolbar-title>
 
     <v-spacer></v-spacer>
 
     <v-toolbar-items>
-
-      <v-btn
-      v-if="!checkToken"
-      to="register"
-      depressed
-      color="primary">
-        Sign up
-      </v-btn>
-
-      <v-btn
-      v-if="!checkToken"
-      to="login"
-      depressed
-      color="primary">
-        Login
-      </v-btn>
 
       <v-btn
       v-if="checkToken"
@@ -43,26 +33,156 @@
     </v-toolbar-items>
 
   </v-app-bar>
+
+    <v-navigation-drawer
+        v-model="drawer"
+        temporary
+        color="secondary"
+        dark
+        app
+    >
+      <v-list
+        nav
+      >
+        <v-list-item-group
+          active-class="dark-blue--text text--accent-6"
+        >
+
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title class="title text-left">
+                Web App
+              </v-list-item-title>
+              <v-list-item-subtitle class="text-left">
+                Skeleton for a SPA
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-divider></v-divider>
+
+          <v-list-item
+          class="text-left"
+          v-for="item of activeLinks"
+          :key="item.title"
+          link
+          :to="item.to">
+
+            <v-list-item-icon
+            >
+              <v-icon>
+                {{ item.icon }}
+              </v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-title>
+              {{ item.title }}
+            </v-list-item-title>
+          </v-list-item>
+
+        </v-list-item-group>
+      </v-list>
+
+      <template v-slot:append
+      v-if="checkToken">
+        <v-container>
+          <v-list
+        nav
+      >
+        <v-list-item-group
+          active-class="dark-blue--text text--accent-6"
+        >
+
+          <v-list-item
+          class="text-left"
+          v-for="item of bottomItems"
+          :key="item.title"
+          @click="item.action()"
+          link>
+
+            <v-list-item-icon
+            >
+              <v-icon>
+                {{ item.icon }}
+              </v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-title>
+              {{ item.title }}
+            </v-list-item-title>
+          </v-list-item>
+
+        </v-list-item-group>
+      </v-list>
+        </v-container>
+      </template>
+
+    </v-navigation-drawer>
+
+  </v-container>
 </template>
 
 <script>
 export default {
+  data () {
+    return {
+      drawer: null,
+      topItems: [
+        { title: 'Home', icon: 'mdi-home', showOnLogin: false, hideOnLogin: false, to: '/', show: true },
+        { title: 'Store', icon: 'mdi-storefront', showOnLogin: false, hideOnLogin: false, to: 'store', show: true },
+        { title: 'Content', icon: 'mdi-firework', showOnLogin: false, hideOnLogin: false, to: 'content', show: true },
+        { title: 'Sign up', icon: 'mdi-account', showOnLogin: false, hideOnLogin: true, to: 'register', show: true },
+        { title: 'Log in', icon: 'mdi-login', showOnLogin: false, hideOnLogin: true, to: 'login', show: true }
+      ],
+      bottomItems: [
+        { title: 'Settings', icon: 'mdi-cog', action: this.navigateToSettings },
+        { title: 'Logout', icon: 'mdi-logout', action: this.logout }
+      ]
+    }
+  },
   methods: {
-    navigateTo (route) {
-      this.$router.push(route)
+    navigateTo (path) {
+      if (this.$router.currentRoute.path !== path) {
+        this.$router.push({path: path})
+      }
+    },
+    navigateToSettings () {
+      this.navigateTo('/settings')
     },
     async logout () {
       try {
         this.$store.dispatch('logout')
-        this.$router.push('root')
+        this.navigateTo('/')
+        this.drawer = false
+        this.topItems
+          .filter(u => { return u.hideOnLogin === true })
+          .map(u => { u.show = true })
       } catch (error) {
         this.error = error.response.data.error
+      }
+    },
+    loginShow () {
+      if (this.checkToken) {
+        this.topItems
+          .filter(u => { return u.showOnLogin === true })
+          .map(u => { u.show = true })
+      }
+    },
+    loginHide () {
+      if (this.checkToken) {
+        this.topItems
+          .filter(u => { return u.hideOnLogin === true })
+          .map(function (u) { u.show = false })
       }
     }
   },
   computed: {
     checkToken: function () {
       return this.$store.state.token != null
+    },
+    activeLinks: function () {
+      return this.topItems
+        .filter(u => u.show === true)
     }
   }
 }
@@ -71,8 +191,5 @@ export default {
 <style scoped>
 .home {
     cursor: pointer;
-}
-.home:hover {
-    color: #000;
 }
 </style>
