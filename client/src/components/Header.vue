@@ -8,29 +8,31 @@
 
     <v-app-bar-nav-icon @click="drawer = true; loginHide(); loginShow();"></v-app-bar-nav-icon>
 
-    <v-toolbar-title
-    v-ripple>
-      <span
-      class="home"
-      @click="navigateTo('/')"
-      >
-      Toolbar
-      </span>
+    <v-toolbar-title>
+      <v-btn
+      icon
+      @click="navigateTo('/')">
+        <v-icon>
+          mdi-home
+        </v-icon>
+      </v-btn>
     </v-toolbar-title>
 
     <v-spacer></v-spacer>
 
-    <v-toolbar-items>
+      <v-btn icon>
+      <v-icon>
+        mdi-heart
+      </v-icon>
+    </v-btn>
 
-      <v-btn
-      v-if="checkToken"
-      @click="logout"
-      depressed
-      color="primary">
-        Logout
-      </v-btn>
-
-    </v-toolbar-items>
+    <v-btn
+    icon
+    class="mr-3">
+      <v-icon>
+        mdi-magnify
+      </v-icon>
+    </v-btn>
 
   </v-app-bar>
 

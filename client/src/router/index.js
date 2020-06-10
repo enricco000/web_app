@@ -40,6 +40,10 @@ export default new Router({
       path: '/store',
       name: 'store',
       component: Store
-    }
+    },
+    // {
+    //   path: "/index.html",
+    //   redirect: "/" 
+    // }
   ]
 })

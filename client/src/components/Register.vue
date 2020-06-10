@@ -135,7 +135,7 @@ export default {
         this.error = error.response.data.error
       }
     },
-    onMutate (email) {
+    onMutate () {
       this.error = null
     }
   },
