@@ -27,9 +27,10 @@
           <v-row
           :justify="'center'">
             <v-btn
-            icon
-            color="black"
-            @click="$router.push({path: '/'})">
+            fab
+            dark
+            color="quaternary"
+            @click="navigateTo('root')">
               <v-icon>
                 mdi-sword
               </v-icon>
@@ -48,6 +49,13 @@ export default {
   name: 'NotFound',
   components: {
     CardSlot
+  },
+  methods: {
+    navigateTo (name) {
+      if (this.$route.name !== name) {
+        this.$router.push({name: name})
+      }
+    }
   }
 }
 </script>

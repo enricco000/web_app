@@ -17,4 +17,7 @@ module.exports = (app) => {
     app.post('/entries',
         EntriesControllerPolicy.post,
         EntriesController.post)
+
+    app.get('/entries/:postId',
+        EntriesController.show)
 }

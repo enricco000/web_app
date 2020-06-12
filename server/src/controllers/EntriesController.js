@@ -23,5 +23,15 @@ module.exports = {
                 error: 'An error has occured while creating post'
             })
         }
+    },
+    async show (req, res) {
+        try {
+            const post = await Entry.findByPk(req.params.postId) // find by primary key
+            res.send(post)
+        } catch (err) {
+            res.status(500).send({
+                error: 'An error has occured while fetching post'
+            })
+        }
     }
 }

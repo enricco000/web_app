@@ -6,5 +6,8 @@ export default {
   },
   post (entry) {
     return Api().post('/entries', entry)
+  },
+  show (postId) {
+    return Api().get(`/entries/${postId}`)
   }
 }

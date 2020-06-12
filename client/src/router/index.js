@@ -4,6 +4,7 @@ import Root from '@/components/Root'
 import Register from '@/components/Register'
 import Login from '@/components/Login'
 import Content from '@/components/Content'
+import Post from '@/components/Post'
 import CreateContent from '@/components/CreateContent'
 import Settings from '@/components/Settings'
 import Shop from '@/components/Shop'
@@ -36,6 +37,11 @@ const router = new Router({
       component: Content
     },
     {
+      path: '/content/post/:postId',
+      name: 'post',
+      component: Post
+    },
+    {
       path: '/content/create',
       name: 'create-content',
       component: CreateContent,
@@ -53,7 +59,7 @@ const router = new Router({
       name: 'shop',
       component: Shop
     },
-    {
+    { 
       path: '/notfound',
       name: 'NotFound',
       component: NotFound,

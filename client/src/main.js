@@ -9,12 +9,15 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import '@mdi/font/css/materialdesignicons.css'
 import {sync} from 'vuex-router-sync'
 import store from '@/store/store'
+import VueYouTubeEmbed from 'vue-youtube-embed'
 
 Vue.config.productionTip = false
 
 Vue.use(Vuetify, {
   iconfont: 'mdi'
 })
+
+Vue.use(VueYouTubeEmbed)
 
 sync(store, router)
 
@@ -30,7 +33,7 @@ new Vue({
           primary: '#080706',
           secondary: '#20232a',
           tertiary: '#061283',
-          quaternary: '#c5001a'
+          quaternary: '#cb0000'
         }
       }
     }

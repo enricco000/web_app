@@ -57,8 +57,7 @@
       <v-list
         nav
       >
-        <v-list-item-group
-        >
+        <v-list-item-group>
 
           <v-list-item
           v-if="!mobileNav"
@@ -106,9 +105,7 @@
           <v-list
         nav
       >
-        <v-list-item-group
-          active-class="dark-blue--text text--accent-6"
-        >
+        <v-list-item-group>
 
           <v-list-item
           class="text-left"
@@ -118,6 +115,7 @@
           link>
 
             <v-list-item-icon
+            class="mr-4"
             >
               <v-icon>
                 {{ item.icon }}
@@ -176,7 +174,7 @@ export default {
   },
   methods: {
     navigateTo (name) {
-      if (this.$router.currentRoute.name !== name) {
+      if (this.$route.name !== name) {
         this.$router.push({name: name})
       }
     },
