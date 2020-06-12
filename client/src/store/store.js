@@ -1,5 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VuexPersist from 'vuex-persist'
+
+const vuexPersist = new VuexPersist({
+  key: 'web_app',
+  storage: window.sessionStorage,
+})
 
 Vue.use(Vuex)
 
@@ -34,5 +40,6 @@ export default new Vuex.Store({
       commit('setUser', null)
       commit('setToken', null)
     }
-  }
+  },
+  plugins: [vuexPersist.plugin]
 })

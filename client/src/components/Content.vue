@@ -1,30 +1,51 @@
 <template>
     <v-container
-    class="fill-height">
-       <v-row>
-         <v-col>
+    fluid>
 
-          <card-slot>
-            <div slot="CardTitle">
-              Content Card Title
-            </div>
+      <v-card
+      hover
+      extended>
 
-            <div class="text-left" slot="CardText">
-              Content Card Text
-            </div>
-          </card-slot>
+          <v-toolbar
+          color="tertiary"
+          class="white--text">
+            <v-toolbar-title>
+              Entries
+            </v-toolbar-title>
+            <template v-slot:extension>
+              <v-btn
+                fab
+                color="quaternary"
+                bottom
+                dark
+                right
+                absolute
+                to="/content/create"
+              >
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </template>
+          </v-toolbar>
 
-         </v-col>
-       </v-row>
+        <v-card-text>
+          Shalalala
+        </v-card-text>
+
+      </v-card>
     </v-container>
 </template>
 
 <script>
-import CardSlot from '@/components/CardSlot'
+import EntriesService from '@/services/EntriesService'
 export default {
   name: 'Content',
-  components: {
-    CardSlot
+  data () {
+    return {
+      entries: null
+    }
+  },
+  async mounted () {
+    this.entries = (await EntriesService.index()).data
   }
 }
 </script>

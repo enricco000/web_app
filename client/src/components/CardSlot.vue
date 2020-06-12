@@ -1,10 +1,12 @@
 <template>
-  <v-container>
+  
+  <v-container
+  fluid>
 
     <v-card
     hover>
       <v-toolbar
-      color="primary"
+      color="tertiary"
       dark>
 
         <v-toolbar-title>
@@ -15,11 +17,15 @@
 
       </v-toolbar>
 
-        <v-card-text>
-          <slot name="CardText">
-            Default Card Text
-          </slot>
-        </v-card-text>
+      <v-card-text>
+        <slot name="CardText">
+        <div class="text-left">
+          Default Card Text
+        </div>
+        </slot>
+      </v-card-text>
+
+      <slot name="BottomCard"></slot>
 
     </v-card>
 
@@ -31,7 +37,8 @@ export default {
   name: 'CardSlot',
   props: [
     'CardTitle',
-    'CardText'
+    'CardText',
+    'BottomCard'
   ]
 }
 </script>

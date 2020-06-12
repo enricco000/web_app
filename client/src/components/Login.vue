@@ -1,67 +1,86 @@
 <template>
-  <v-container class="fill-height">
-    <v-row>
-      <v-col>
-        <v-card
-        hover>
+  <v-container
+  fluid>
+    <card-slot>
 
-          <v-toolbar color="primary" dark>
-            <v-toolbar-title>
-              Login
-            </v-toolbar-title>
-          </v-toolbar>
+      <div slot="CardTitle">
+        Login
+      </div>
 
-          <v-card-text>
+      <div slot="CardText">
+        <v-form>
+          <v-text-field
+          v-model="email"
+          label="Email*"
+          name="email"
+          text="email"
+          :rules="[rules.required]"
+          prepend-inner-icon="person">
+          </v-text-field>
 
-            <v-form>
-              <v-text-field
-              v-model="email"
-              label="Email"
-              name="email"
-              text="email"
-              :rules="[rules.required]"
-              prepend-inner-icon="person">
-              </v-text-field>
+          <v-text-field
+            v-model="password"
+            label="Password*"
+            name="password"
+            :type="show ? 'text' : 'password'"
+            :rules="[rules.required]"
+            autocomplete="new-password"
+            :prepend-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+            @click:prepend-inner="show = !show">
+            </v-text-field>
+        </v-form>
 
-              <v-text-field
-                v-model="password"
-                label="Password"
-                name="password"
-                :type="show ? 'text' : 'password'"
-                :rules="[rules.required]"
-                autocomplete="new-password"
-                :prepend-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
-                @click:prepend-inner="show = !show">
-                </v-text-field>
-            </v-form>
+        <v-alert
+        type="error"
+        v-if="error"
+        elevation=6
+        dismissible
+        class="text-left"
+        >
+          {{ error }}
+        </v-alert>
 
-          </v-card-text>
+        <v-snackbar
+        v-model="snackbarRules.snackbar"
+        :timeout="snackbarRules.timeout">
+          {{ snackbarRules.text }}
+          <v-btn
+            color="green"
+            text
+            @click="snackbarRules.snackbar = false">
+            OK
+          </v-btn>
+        </v-snackbar>
 
-          <v-card-actions>
-              <v-container>
-                <v-row
-                :align="'end'"
-                :justify="'end'">
-                  <v-btn
-                  :disabled="!enteredCredentials"
-                  @click="login()"
-                  color="primary"
-                  >
-                    Login
-                  </v-btn>
-                </v-row>
-              </v-container>
-            </v-card-actions>
+      </div>
 
-        </v-card>
-      </v-col>
-    </v-row>
+      <v-card-actions
+      slot="BottomCard">
+        <v-row
+        :justify="'end'"
+        class="mr-2 pb-2">
+          <v-btn
+          :disabled="!enteredCredentials"
+          @click="login()"
+          color="tertiary"
+          class="white--text"
+          >
+            Login
+          </v-btn>
+        </v-row>
+      </v-card-actions>
+
+    </card-slot>
   </v-container>
 </template>
 
 <script>
 import AuthenticationService from '@/services/AuthenticationService.js'
+import CardSlot from '@/components/CardSlot'
 export default {
+  components: {
+    CardSlot
+  },
   data () {
     return {
       email: '',
@@ -70,6 +89,11 @@ export default {
       error: null,
       rules: {
         required: value => !!value || 'Required'
+      },
+      snackbarRules: {
+        snackbar: false,
+        text: 'Login succesful!',
+        timeout: 1000 
       }
     }
   },
@@ -80,11 +104,11 @@ export default {
           email: this.email,
           password: this.password
         })
-        console.log(response)
         this.$store.dispatch('setToken', response.data.token)
         this.$store.dispatch('setUser', response.data.user)
+        this.snackbarRules.snackbar = true
         this.error = null
-        this.$router.push('/')
+        setTimeout(() => this.$router.push('/'), 1250)
       } catch (error) {
         this.error = error.response.data.error
       }

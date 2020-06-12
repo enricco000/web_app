@@ -2,16 +2,22 @@
   <v-container
   fluid>
   <v-app-bar
+  v-if="!$route.meta.hideNavigation"
   :app=true
   dark
   color="primary">
 
-    <v-app-bar-nav-icon @click="drawer = true; loginHide(); loginShow();"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon
+    @click="drawer = true; loginHide(); loginShow();"
+    v-if="mobileNav === false"
+    >
+    </v-app-bar-nav-icon>
 
     <v-toolbar-title>
       <v-btn
       icon
-      @click="navigateTo('/')">
+      exact
+      to="/">
         <v-icon>
           mdi-home
         </v-icon>
@@ -20,17 +26,20 @@
 
     <v-spacer></v-spacer>
 
-      <v-btn icon>
+    <v-btn
+    icon
+    class="mr-1">
       <v-icon>
-        mdi-heart
+        mdi-magnify
       </v-icon>
     </v-btn>
 
     <v-btn
     icon
-    class="mr-3">
+    v-if="mobileNav"
+    @click="drawer = true; loginHide(); loginShow();">
       <v-icon>
-        mdi-magnify
+        mdi-menu
       </v-icon>
     </v-btn>
 
@@ -39,18 +48,21 @@
     <v-navigation-drawer
         v-model="drawer"
         temporary
-        color="secondary"
         dark
+        :mini-variant="mobileNav"
+        :right="mobileNav"
+        color="secondary"
         app
     >
       <v-list
         nav
       >
         <v-list-item-group
-          active-class="dark-blue--text text--accent-6"
         >
 
-          <v-list-item>
+          <v-list-item
+          v-if="!mobileNav"
+          >
             <v-list-item-content>
               <v-list-item-title class="title text-left">
                 Web App
@@ -61,13 +73,16 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-divider></v-divider>
+          <v-divider
+          v-if="!mobileNav">
+          </v-divider>
 
           <v-list-item
           class="text-left"
           v-for="item of activeLinks"
           :key="item.title"
           link
+          exact
           :to="item.to">
 
             <v-list-item-icon
@@ -121,6 +136,18 @@
 
     </v-navigation-drawer>
 
+    <v-snackbar
+      v-model="snackbarRules.snackbar"
+      :timeout="snackbarRules.timeout">
+        {{ snackbarRules.text }}
+        <v-btn
+          color="blue"
+          text
+          @click="snackbarRules.snackbar = false">
+          Close
+        </v-btn>
+      </v-snackbar>
+
   </v-container>
 </template>
 
@@ -131,31 +158,37 @@ export default {
       drawer: null,
       topItems: [
         { title: 'Home', icon: 'mdi-home', showOnLogin: false, hideOnLogin: false, to: '/', show: true },
-        { title: 'Store', icon: 'mdi-storefront', showOnLogin: false, hideOnLogin: false, to: 'store', show: true },
-        { title: 'Content', icon: 'mdi-firework', showOnLogin: false, hideOnLogin: false, to: 'content', show: true },
-        { title: 'Sign up', icon: 'mdi-account', showOnLogin: false, hideOnLogin: true, to: 'register', show: true },
-        { title: 'Log in', icon: 'mdi-login', showOnLogin: false, hideOnLogin: true, to: 'login', show: true }
+        { title: 'Shop', icon: 'mdi-storefront', showOnLogin: false, hideOnLogin: false, to: '/shop', show: true },
+        { title: 'Content', icon: 'mdi-duck', showOnLogin: false, hideOnLogin: false, to: '/content', show: true },
+        { title: 'Create Account', icon: 'mdi-account-plus', showOnLogin: false, hideOnLogin: true, to: '/register', show: true },
+        { title: 'Log in', icon: 'mdi-login', showOnLogin: false, hideOnLogin: true, to: '/login', show: true }
       ],
       bottomItems: [
         { title: 'Settings', icon: 'mdi-cog', action: this.navigateToSettings },
         { title: 'Logout', icon: 'mdi-logout', action: this.logout }
-      ]
+      ],
+      snackbarRules: {
+        snackbar: false,
+        text: 'Goodbye!',
+        timeout: 1000
+      }
     }
   },
   methods: {
-    navigateTo (path) {
-      if (this.$router.currentRoute.path !== path) {
-        this.$router.push({path: path})
+    navigateTo (name) {
+      if (this.$router.currentRoute.name !== name) {
+        this.$router.push({name: name})
       }
     },
     navigateToSettings () {
-      this.navigateTo('/settings')
+      this.navigateTo('settings')
     },
     async logout () {
       try {
-        this.$store.dispatch('logout')
-        this.navigateTo('/')
         this.drawer = false
+        this.$store.dispatch('logout')
+        this.snackbarRules.snackbar = true
+        setTimeout(() => this.navigateTo('root'), 1250)
         this.topItems
           .filter(u => { return u.hideOnLogin === true })
           .map(u => { u.show = true })
@@ -185,13 +218,13 @@ export default {
     activeLinks: function () {
       return this.topItems
         .filter(u => u.show === true)
+    },
+    mobileNav () {
+      return this.$vuetify.breakpoint.smAndDown
     }
   }
 }
 </script>
 
 <style scoped>
-.home {
-    cursor: pointer;
-}
 </style>

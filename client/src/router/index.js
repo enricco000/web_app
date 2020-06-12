@@ -4,12 +4,16 @@ import Root from '@/components/Root'
 import Register from '@/components/Register'
 import Login from '@/components/Login'
 import Content from '@/components/Content'
+import CreateContent from '@/components/CreateContent'
 import Settings from '@/components/Settings'
-import Store from '@/components/Store'
+import Shop from '@/components/Shop'
+import NotFound from '@/components/NotFound'
+import store from '@/store/store'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -32,18 +36,50 @@ export default new Router({
       component: Content
     },
     {
+      path: '/content/create',
+      name: 'create-content',
+      component: CreateContent,
+      meta: { 
+        requiresAuth: true
+      }
+    },
+    {
       path: '/settings',
       name: 'settings',
       component: Settings
     },
     {
-      path: '/store',
-      name: 'store',
-      component: Store
+      path: '/shop',
+      name: 'shop',
+      component: Shop
     },
-    // {
-    //   path: "/index.html",
-    //   redirect: "/" 
-    // }
+    {
+      path: '/notfound',
+      name: 'NotFound',
+      component: NotFound,
+      meta: { 
+        hideNavigation: true
+      }
+    },
+    {
+      path: '*',
+      redirect: '/notfound'
+    }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some (record => record.meta.requiresAuth)) {
+    if (!store.state.isUserLoggedin) {
+      next({
+        path: '/login',
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
+
+export default router

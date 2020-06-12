@@ -27,8 +27,10 @@ new Vue({
     theme: {
       themes: {
         light: {
-          primary: '#5fc0be',
-          secondary: '#074847'
+          primary: '#080706',
+          secondary: '#20232a',
+          tertiary: '#061283',
+          quaternary: '#c5001a'
         }
       }
     }

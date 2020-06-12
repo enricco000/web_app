@@ -16,7 +16,7 @@
 <script>
 import CardSlot from '@/components/CardSlot'
 export default {
-  name: 'Settings',
+  name: 'Shop',
   components: {
     CardSlot
   }
