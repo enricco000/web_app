@@ -12,43 +12,75 @@
 
           <v-row
           no-gutters>
+            <v-row>
+              <v-col
+              cols="12" xs="6" class="mr-auto">
+                    <div class="overline text-left ma-4">
+                      {{ post.author }} - {{ post.date }} UTC
+                    </div>
+                    <div class="headline ma-4 text-left">{{ post.title }}</div>
+                    <div class="text-left mr-4 ml-4 mb-4">{{ post.subTitle }}</div>
+              </v-col>
+            </v-row>
+            
+            <v-row
+            no-gutters
+            :align="'end'"
+            :justify="'end'">
+              <v-col
+              v-if="this.$store.state.token != null"
+              cols="3"
+              xs="2">
+                <v-row
+                no-gutters
+                :justify="'end'"
+                :align="'end'"
+                class="mr-2 mb-2">
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                      fab
+                      v-bind="attrs"
+                      exact
+                      :to="{name: 'edit-content'}"
+                      v-on="on">
+                    <v-icon>
+                      mdi-playlist-edit
+                    </v-icon>
+                  </v-btn>
+                    </template>
+                    <span>Edit this post</span>
+                  </v-tooltip>
+                </v-row>
+              </v-col>
 
-            <v-col
-            cols="12" sm="6">
-              <v-list-item>
-                <v-list-item-content>
-                  <div class="overline text-left mb-1">
-                    {{ post.author }} - {{ post.date }} UTC
-                  </div>
-                  <v-list-item-title class="headline mb-1 text-left">{{ post.title }}</v-list-item-title>
-                  <v-list-item-subtitle class="text-left mb-2">{{ post.subTitle }}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-col>
+              <v-col
+              cols="3"
+              xs="2">
+                <v-row
+                no-gutters
+                :justify="'end'"
+                :align="'end'"
+                class="mr-2 mb-2">
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                      fab
+                      v-bind="attrs"
+                      exact
+                      to="/content"
+                      v-on="on">
+                    <v-icon>
+                      mdi-duck
+                    </v-icon>
+                  </v-btn>
+                    </template>
+                    <span>Back to content</span>
+                  </v-tooltip>
+                </v-row>
+              </v-col>
+            </v-row>
 
-            <v-col>
-              <v-row
-              no-gutters
-              :justify="'end'"
-              :align="'end'"
-              class="mr-2 ma-2">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                    fab
-                    v-bind="attrs"
-                    exact
-                    to="/content"
-                    v-on="on">
-                  <v-icon>
-                    mdi-duck
-                  </v-icon>
-                </v-btn>
-                  </template>
-                  <span>Back to Content</span>
-                </v-tooltip>
-              </v-row>
-            </v-col>
           </v-row>
 
           <v-row
@@ -79,7 +111,7 @@
           <v-row
           class="text-left ml-2 mr-2">
             <v-col>
-              {{ post.content }}
+              <nl2br tag="p" :text="`${this.post.content}`" />
             </v-col>
           </v-row>
 
@@ -115,6 +147,7 @@
           </v-row>
 
         </v-card>
+
       </v-card-text>
 
       </v-card>
@@ -124,8 +157,12 @@
 
 <script>
 import EntriesService from '@/services/EntriesService'
+import Nl2br from 'vue-nl2br'
 export default {
   name: 'Post',
+  components: {
+    Nl2br
+  },
   data () {
     return {
       post: {}
@@ -134,7 +171,7 @@ export default {
   async mounted () {
     const postId = this.$store.state.route.params.postId
     this.post = (await EntriesService.show(postId)).data
-    this.post.date = this.post.createdAt.slice(0 ,19)
+    this.post.date = this.post.createdAt.substring(0 ,19)
   },
   computed: {
   mobileNav () {

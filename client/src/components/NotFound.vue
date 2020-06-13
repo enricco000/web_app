@@ -11,14 +11,14 @@
       <div
       slot="CardText"
       class="text-center">
-        <h2
+        <h3
         class="text-center">
           It's dangerous to go alone!
-        </h2>
+        </h3>
 
-        <h2>
+        <h3>
           Take this.
-        </h2>
+        </h3>
       </div>
 
       <div
@@ -30,7 +30,7 @@
             fab
             dark
             color="quaternary"
-            @click="navigateTo('root')">
+            @click="navigateTo('content')">
               <v-icon>
                 mdi-sword
               </v-icon>

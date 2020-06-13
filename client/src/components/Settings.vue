@@ -4,7 +4,7 @@
 
     <v-row
     class="ml-4 mr-4 text-left">
-      This is a placeholder text for the Store component
+      This is a placeholder text for the Settings
     </v-row>
 
   <card-slot>

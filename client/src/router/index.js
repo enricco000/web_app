@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Root from '@/components/Root'
 import Register from '@/components/Register'
 import Login from '@/components/Login'
 import Content from '@/components/Content'
 import Post from '@/components/Post'
 import CreateContent from '@/components/CreateContent'
+import EditContent from '@/components/EditContent'
 import Settings from '@/components/Settings'
 import Shop from '@/components/Shop'
 import NotFound from '@/components/NotFound'
@@ -18,8 +18,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'root',
-      component: Root
+      redirect: '/content'
     },
     {
       path: '/register',
@@ -45,6 +44,14 @@ const router = new Router({
       path: '/content/create',
       name: 'create-content',
       component: CreateContent,
+      meta: { 
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/content/post/:postId/edit',
+      name: 'edit-content',
+      component: EditContent,
       meta: { 
         requiresAuth: true
       }

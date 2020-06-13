@@ -1,6 +1,7 @@
 <template>
   <v-container
   fluid>
+
   <v-app-bar
   v-if="!$route.meta.hideNavigation"
   :app=true
@@ -26,13 +27,26 @@
 
     <v-spacer></v-spacer>
 
-    <v-btn
+    <!-- <v-btn
     icon
-    class="mr-1">
+    class="mr-1"
+    v-if="this.$route.name === 'content'">
       <v-icon>
         mdi-magnify
       </v-icon>
-    </v-btn>
+    </v-btn> -->
+
+        <v-text-field
+        hide-details
+        v-if="$route.name === 'content'"
+        v-model="search"
+        prepend-icon="search"
+        single-line
+        solo
+        label="Title, author or content"
+        class="shrink"
+          >
+        </v-text-field>
 
     <v-btn
     icon
@@ -150,14 +164,14 @@
 </template>
 
 <script>
+import _ from 'lodash'
 export default {
   data () {
     return {
       drawer: null,
       topItems: [
-        { title: 'Home', icon: 'mdi-home', showOnLogin: false, hideOnLogin: false, to: '/', show: true },
+        { title: 'Home', icon: 'mdi-duck', showOnLogin: false, hideOnLogin: false, to: '/', show: true },
         { title: 'Shop', icon: 'mdi-storefront', showOnLogin: false, hideOnLogin: false, to: '/shop', show: true },
-        { title: 'Content', icon: 'mdi-duck', showOnLogin: false, hideOnLogin: false, to: '/content', show: true },
         { title: 'Create Account', icon: 'mdi-account-plus', showOnLogin: false, hideOnLogin: true, to: '/register', show: true },
         { title: 'Log in', icon: 'mdi-login', showOnLogin: false, hideOnLogin: true, to: '/login', show: true }
       ],
@@ -169,7 +183,8 @@ export default {
         snackbar: false,
         text: 'Goodbye!',
         timeout: 1000
-      }
+      },
+      search: null
     }
   },
   methods: {
@@ -186,7 +201,7 @@ export default {
         this.drawer = false
         this.$store.dispatch('logout')
         this.snackbarRules.snackbar = true
-        setTimeout(() => this.navigateTo('root'), 1250)
+        setTimeout(() => this.navigateTo('content'), 1250)
         this.topItems
           .filter(u => { return u.hideOnLogin === true })
           .map(u => { u.show = true })
@@ -219,6 +234,27 @@ export default {
     },
     mobileNav () {
       return this.$vuetify.breakpoint.smAndDown
+    }
+  },
+  watch: {
+    search: _.debounce (async function (value) {
+      const route = {
+        name: 'content'
+      }
+      if (this.search !== '') {
+        route.query = {
+          search: this.search
+        }
+      }
+      if (this.$route.query.search !== value) {
+        this.$router.push(route)
+      }
+    }, 1000),
+    '$route.query.search': {
+      immediate: true,
+      handler (value) {
+        this.search = value
+      }
     }
   }
 }

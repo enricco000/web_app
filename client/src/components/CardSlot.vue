@@ -10,9 +10,11 @@
       dark>
 
         <v-toolbar-title>
-          <slot name="CardTitle">
-            Default Card Title
-          </slot>
+          <h2>
+            <slot name="CardTitle">
+              Default Card Title
+            </slot>
+          </h2>
         </v-toolbar-title>
 
       </v-toolbar>

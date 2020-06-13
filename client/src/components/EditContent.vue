@@ -7,7 +7,7 @@
 
           <card-slot>
             <div slot="CardTitle">
-                Create Entry
+                Edit Entry
             </div>
 
             <div class="text-left" slot="CardText">
@@ -134,8 +134,8 @@
                   :disabled="!entry.title || !entry.content"
                   color="tertiary"
                   class="white--text"
-                  @click="create()">
-                    Create
+                  @click="save()">
+                    Save Edit
                   </v-btn>
               </v-row>
             </v-card-actions>
@@ -151,7 +151,7 @@
 import CardSlot from '@/components/CardSlot'
 import EntriesService from '@/services/EntriesService'
 export default {
-  name: 'CreateContent',
+  name: 'EditContent',
   data () {
     return {
       error: null,
@@ -166,7 +166,7 @@ export default {
       },
       snackbarRules: {
         snackbar: false,
-        text: 'Post successful!',
+        text: 'Edit successful!',
         timeout: 1000 
       }
     }
@@ -175,19 +175,21 @@ export default {
     CardSlot
   },
   methods: {
-    async create () {
+    async save () {
       try {
-        await EntriesService.post(this.entry)
+        await EntriesService.put(this.entry)
         this.snackbarRules.snackbar = true
         this.error = null
         setTimeout(() => this.$router.push({name: 'content'}), 1250)
       } catch (error) {
         this.error = error.response.data.error
       }
-    }
+    },
   },
-  mounted () {
-    this.entry.author = this.$store.state.user.email
+  async mounted () {
+    const postId = this.$store.state.route.params.postId
+    this.postId = postId
+    this.entry = (await EntriesService.show(this.postId)).data
   }
 }
 </script>

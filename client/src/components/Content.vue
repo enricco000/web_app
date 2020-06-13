@@ -10,9 +10,13 @@
           color="tertiary"
           class="white--text mb-4">
             <v-toolbar-title>
-              Entries
+                <h2
+                class="ml-2 mt-2">
+                  Entries
+                </h2>
             </v-toolbar-title>
-            <template v-slot:extension>
+            <template v-slot:extension
+            v-if="this.$store.state.token != null">
               <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
@@ -43,7 +47,8 @@
                 <v-row
                 no-gutters>
 
-                  <v-col>
+                  <v-col
+                  cols="8">
                     <v-list-item>
                       <v-list-item-content>
                         <div class="overline text-left mb-1">
@@ -160,12 +165,17 @@ export default {
       entries: null
     }
   },
-  async mounted () {
-    this.entries = (await EntriesService.index()).data
-    },
   computed: {
   mobileNav () {
       return this.$vuetify.breakpoint.smAndDown
+    }
+  },
+  watch: {
+    '$route.query.search': {
+      immediate: true,
+      async handler (value) {
+        this.entries = (await EntriesService.index(value)).data
+      }
     }
   }
 }
