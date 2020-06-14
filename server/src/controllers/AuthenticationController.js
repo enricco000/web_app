@@ -13,21 +13,45 @@ function jwtSignUser (user) {
 module.exports = {
     async register (req, res) {
         try {
-            const user = await User.create(req.body)
-            res.send(user.toJSON())
+            const {email, username} = req.body
+            const existingEmail = await User.findOne({
+                where: {
+                    email: email
+                }
+            })
+            const existingUsername = await User.findOne({
+                where: {
+                    username: username
+                }
+            })
+            if (existingEmail != null) {
+                res.status(400).send({
+                    error: 'This email account already has a username associated'
+                })
+            }
+            if (existingUsername != null) {
+                res.status(400).send({
+                    error: 'This username is taken'
+                })
+            }
+            if (existingEmail == null && existingUsername == null) {
+                req.body.isAdmin = false
+                const user = await User.create(req.body)
+                res.send(user.toJSON())
+            }
         } catch (err) {
-            res.status(400).send({
-                error: 'This email account is already in use'
+            res.status(500).send({
+                error: 'An error occured during registration'
             })
         }
     },
 
     async login (req, res) {
         try {
-            const {email, password} = req.body
+            const {username, password} = req.body
             const user = await User.findOne({
                 where: {
-                    email: email
+                    username: username
                 }
             })
             if (!user) {

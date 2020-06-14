@@ -13,7 +13,8 @@ export default new Vuex.Store({
   strict: true,
   state: {
     token: null,
-    user: null,
+    username: null,
+    isAdmin: null,
     isUserLoggedin: false
   },
   mutations: {
@@ -25,16 +26,22 @@ export default new Vuex.Store({
         state.isUserLoggedin = false
       }
     },
-    setUser (state, user) {
-      state.user = user
+    setUser (state, username) {
+      state.user = username
+    },
+    setIsAdmin (state, isAdmin) {
+      state.isAdmin = isAdmin
     }
   },
   actions: {
     setToken ({commit}, token) {
       commit('setToken', token)
     },
-    setUser ({commit}, user) {
-      commit('setUser', user)
+    setUser ({commit}, username) {
+      commit('setUser', username)
+    },
+    setIsAdmin ({commit}, isAdmin) {
+      commit ('setIsAdmin', isAdmin)
     },
     logout ({commit}) {
       commit('setUser', null)

@@ -9,12 +9,24 @@
       <div slot="CardText">
         <v-form>
           <v-text-field
+          label="Username*"
+          name="username"
+          text="username"
+          :rules="[rules.required]"
+          autocomplete="new-user"
+          prepend-inner-icon="person"
+          v-model="username"
+          v-mutate="() => onMutate()"
+          >
+          </v-text-field>
+
+          <v-text-field
           label="Email*"
           name="email"
           text="email"
           :rules="[rules.required]"
           autocomplete="new-email"
-          prepend-inner-icon="person"
+          prepend-inner-icon="mdi-email"
           v-model="email"
           v-mutate="() => onMutate()"
           >
@@ -96,6 +108,7 @@ export default {
   },
   data () {
     return {
+      username: '',
       email: '',
       password: '',
       reTypePassword: '',
@@ -118,6 +131,7 @@ export default {
     async register () {
       try {
         const response = await AuthenticationService.register({
+          username: this.username,
           email: this.email,
           password: this.password
         })

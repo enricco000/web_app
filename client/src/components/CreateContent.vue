@@ -187,7 +187,7 @@ export default {
     }
   },
   mounted () {
-    this.entry.author = this.$store.state.user.email
+    this.entry.author = this.$store.state.user.username
   }
 }
 </script>

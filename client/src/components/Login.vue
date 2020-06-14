@@ -10,10 +10,10 @@
       <div slot="CardText">
         <v-form>
           <v-text-field
-          v-model="email"
-          label="Email*"
-          name="email"
-          text="email"
+          v-model="username"
+          label="Username*"
+          name="username"
+          text="username"
           :rules="[rules.required]"
           prepend-inner-icon="person">
           </v-text-field>
@@ -83,7 +83,7 @@ export default {
   },
   data () {
     return {
-      email: '',
+      username: '',
       password: '',
       show: false,
       error: null,
@@ -101,7 +101,7 @@ export default {
     async login () {
       try {
         const response = await AuthenticationService.login({
-          email: this.email,
+          username: this.username,
           password: this.password
         })
         this.$store.dispatch('setToken', response.data.token)
