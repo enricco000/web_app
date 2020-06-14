@@ -79,5 +79,25 @@ module.exports = {
                 error: 'An error has occured trying to login'
             })
         }
+    },
+
+    async user (req, res) {
+        try {
+            const {username} = req.query
+            const user = await User.findOne({
+                where: {
+                    username: username
+                }
+            })
+            delete user.dataValues.password
+            delete user.dataValues.createdAt
+            delete user.dataValues.updatedAt
+            delete user.dataValues.isAdmin
+            return res.send(user.toJSON())
+        } catch (error) {
+            return res.status(403).send({
+                error: 'Error while fetching user id'
+            })
+        }
     }
 }

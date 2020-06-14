@@ -44,6 +44,44 @@
               <v-card
               outlined>
 
+              <v-row
+               class="ml-2 mt-2"
+               v-if="$store.state.isUserLoggedin && entry.bookmarked">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                    fab
+                    small
+                    v-bind="attrs"
+                    v-on="on">
+                  <v-icon>
+                    mdi-star-outline
+                  </v-icon>
+                </v-btn>
+                  </template>
+                  <span>Bookmark this post</span>
+                </v-tooltip>
+              </v-row>
+
+              <v-row
+               class="ml-2 mt-2"
+               v-if="$store.state.isUserLoggedin && !entry.bookmarked">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                    fab
+                    small
+                    v-bind="attrs"
+                    v-on="on">
+                  <v-icon>
+                    mdi-star
+                  </v-icon>
+                </v-btn>
+                  </template>
+                  <span>Remove bookmark</span>
+                </v-tooltip>
+              </v-row>
+
                 <v-row
                 no-gutters>
 
@@ -157,18 +195,35 @@
 </template>
 
 <script>
+import BookmarksService from '@/services/BookmarksService'
 import EntriesService from '@/services/EntriesService'
+import AuthenticationService from '@/services/AuthenticationService'
 export default {
   name: 'Content',
   data () {
     return {
-      entries: null
+      reloader: 0,
+      userId: null,
+      entries: null,
+    }
+  },
+  async mounted () {
+    if (this.$store.state.isUserLoggedin) {
+      this.userId = (await AuthenticationService.user({username: this.$store.state.user.username})).data.id
+    if (this.entries) {
+      this.entries.forEach(async (entry) => {
+        entry.bookmarked = (await BookmarksService.index({
+          userId: this.userId,
+          entryId: entry.id
+        })).data
+      })
+    }
     }
   },
   computed: {
-  mobileNav () {
-      return this.$vuetify.breakpoint.smAndDown
-    }
+    mobileNav () {
+        return this.$vuetify.breakpoint.smAndDown
+      }
   },
   watch: {
     '$route.query.search': {
