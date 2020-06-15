@@ -53,13 +53,14 @@
                     fab
                     small
                     v-bind="attrs"
-                    v-on="on">
+                    v-on="on"
+                    @click="removeBookmark(entry.id); entry.bookmarked=false">
                   <v-icon>
-                    mdi-star-outline
+                    mdi-star
                   </v-icon>
                 </v-btn>
                   </template>
-                  <span>Bookmark this post</span>
+                  <span>Remove bookmark</span>
                 </v-tooltip>
               </v-row>
 
@@ -72,15 +73,26 @@
                     fab
                     small
                     v-bind="attrs"
-                    v-on="on">
+                    v-on="on"
+                    @click="createBookmark(entry.id); entry.bookmarked=true">
                   <v-icon>
-                    mdi-star
+                    mdi-star-outline
                   </v-icon>
                 </v-btn>
                   </template>
-                  <span>Remove bookmark</span>
+                  <span>Bookmark this post</span>
                 </v-tooltip>
               </v-row>
+
+              <v-alert
+              type="error"
+              v-if="error"
+              elevation=6
+              dismissible
+              class="text-left"
+              >
+                {{ error }}
+              </v-alert>
 
                 <v-row
                 no-gutters>
@@ -147,7 +159,7 @@
                               v-bind="attrs"
                               v-on="on"
                               color="tertiary"
-                              :to="{name: 'post', params: {postId: entry.id}}">
+                              :to="{name: 'post', params: {postId: entry.id, bookmarked: entry.bookmarked}}">
                                 <v-icon>
                                   mdi-text-subject
                                 </v-icon>
@@ -197,39 +209,53 @@
 <script>
 import BookmarksService from '@/services/BookmarksService'
 import EntriesService from '@/services/EntriesService'
-import AuthenticationService from '@/services/AuthenticationService'
 export default {
   name: 'Content',
   data () {
     return {
-      reloader: 0,
-      userId: null,
+      error: null,
       entries: null,
-    }
-  },
-  async mounted () {
-    if (this.$store.state.isUserLoggedin) {
-      this.userId = (await AuthenticationService.user({username: this.$store.state.user.username})).data.id
-    if (this.entries) {
-      this.entries.forEach(async (entry) => {
-        entry.bookmarked = (await BookmarksService.index({
-          userId: this.userId,
-          entryId: entry.id
-        })).data
-      })
-    }
     }
   },
   computed: {
     mobileNav () {
-        return this.$vuetify.breakpoint.smAndDown
-      }
+      return this.$vuetify.breakpoint.smAndDown
+    }
   },
   watch: {
     '$route.query.search': {
       immediate: true,
       async handler (value) {
         this.entries = (await EntriesService.index(value)).data
+        this.entries.forEach(async entry => {
+          // this is the only way to add a new reactive property
+          this.$set(entry, 'bookmarked', (await BookmarksService.index({
+            userId: this.$store.state.user.id,
+            entryId: entry.id
+          })).data)
+        })
+      }
+    }
+  },
+  methods: {
+    async createBookmark (entryId) {
+      try {
+        await BookmarksService.post({
+        EntryId: entryId,
+        UserId: this.$store.state.user.id
+      })
+      } catch (error) {
+        this.error = error
+      }
+    },
+    async removeBookmark (entryId) {
+      try {
+        await BookmarksService.delete({
+        EntryId: entryId,
+        UserId: this.$store.state.user.id
+      })
+      } catch (error) {
+        this.error = error
       }
     }
   }

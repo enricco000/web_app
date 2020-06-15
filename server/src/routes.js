@@ -11,9 +11,6 @@ module.exports = (app) => {
     
     app.post('/login',
         AuthenticationController.login)
-    
-    app.get('/user',
-        AuthenticationController.user)
 
     app.get('/entries',
         EntriesController.index)
@@ -30,4 +27,10 @@ module.exports = (app) => {
     
     app.get('/bookmarks',
         BookmarksController.index)
+    
+    app.post('/bookmarks',
+        BookmarksController.post)
+    
+    app.delete('/bookmarks/delete',
+        BookmarksController.delete)
 }

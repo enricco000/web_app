@@ -11,6 +11,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   strict: true,
+  plugins: [vuexPersist.plugin],
   state: {
     token: null,
     username: null,
@@ -47,6 +48,5 @@ export default new Vuex.Store({
       commit('setUser', null)
       commit('setToken', null)
     }
-  },
-  plugins: [vuexPersist.plugin]
+  }
 })

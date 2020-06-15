@@ -10,6 +10,56 @@
         <v-card
         outlined>
 
+        <v-row
+        class="ml-2 mt-2"
+        v-if="$store.state.isUserLoggedin && bookmarked">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+            fab
+            small
+            v-bind="attrs"
+            v-on="on"
+            @click="removeBookmark(post.id); bookmarked=false">
+          <v-icon>
+            mdi-star
+          </v-icon>
+        </v-btn>
+          </template>
+          <span>Remove bookmark</span>
+        </v-tooltip>
+      </v-row>
+
+      <v-row
+        class="ml-2 mt-2"
+        v-if="$store.state.isUserLoggedin && !bookmarked">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+            fab
+            small
+            v-bind="attrs"
+            v-on="on"
+            @click="createBookmark(post.id); bookmarked=true">
+          <v-icon>
+            mdi-star-outline
+          </v-icon>
+        </v-btn>
+          </template>
+          <span>Bookmark this post</span>
+        </v-tooltip>
+      </v-row>
+
+      <v-alert
+      type="error"
+      v-if="error"
+      elevation=6
+      dismissible
+      class="text-left"
+      >
+        {{ error }}
+      </v-alert>
+
           <v-row
           no-gutters>
             <v-row>
@@ -156,6 +206,7 @@
 </template>
 
 <script>
+import BookmarksService from '@/services/BookmarksService'
 import EntriesService from '@/services/EntriesService'
 import Nl2br from 'vue-nl2br'
 export default {
@@ -165,17 +216,42 @@ export default {
   },
   data () {
     return {
-      post: {}
+      error: null,
+      post: {},
+      bookmarked: false
     }
   },
   async mounted () {
     const postId = this.$store.state.route.params.postId
     this.post = (await EntriesService.show(postId)).data
     this.post.date = this.post.createdAt.substring(0 ,19)
+    this.bookmarked = this.$store.state.route.params.bookmarked
   },
   computed: {
   mobileNav () {
       return this.$vuetify.breakpoint.smAndDown
+    }
+  },
+  methods: {
+    async createBookmark (entryId) {
+      try {
+        await BookmarksService.post({
+        EntryId: entryId,
+        UserId: this.$store.state.user.id
+      })
+      } catch (error) {
+        this.error = error
+      }
+    },
+    async removeBookmark (entryId) {
+      try {
+        await BookmarksService.delete({
+        EntryId: entryId,
+        UserId: this.$store.state.user.id
+      })
+      } catch (error) {
+        this.error = error
+      }
     }
   }
 }
