@@ -64,5 +64,5 @@ module.exports = {
                 error: 'An error occured while updating post'
             })
         }
-    }
+    },
 }

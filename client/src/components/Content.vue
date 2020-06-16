@@ -215,6 +215,7 @@ export default {
     return {
       error: null,
       entries: null,
+      starredEntries: null,
     }
   },
   computed: {
@@ -227,13 +228,14 @@ export default {
       immediate: true,
       async handler (value) {
         this.entries = (await EntriesService.index(value)).data
-        this.entries.forEach(async entry => {
-          // this is the only way to add a new reactive property
+        if (this.$store.state.isUserLoggedin){
+          this.entries.forEach(async entry => {
+          // this.$set is the only way to add a new reactive property
           this.$set(entry, 'bookmarked', (await BookmarksService.index({
-            userId: this.$store.state.user.id,
             entryId: entry.id
           })).data)
         })
+        }
       }
     }
   },
@@ -242,20 +244,18 @@ export default {
       try {
         await BookmarksService.post({
         EntryId: entryId,
-        UserId: this.$store.state.user.id
       })
       } catch (error) {
-        this.error = error
+        this.error = error.response.error
       }
     },
     async removeBookmark (entryId) {
       try {
         await BookmarksService.delete({
         EntryId: entryId,
-        UserId: this.$store.state.user.id
       })
       } catch (error) {
-        this.error = error
+        this.error = error.response.error
       }
     }
   }

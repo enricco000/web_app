@@ -15,5 +15,10 @@ export default {
         return Api().delete('bookmarks/delete', {
             params: bookmark
         })
+    },
+    indexer (UserId) {
+        return Api().get('bookmarks/indexer', {
+            params: UserId
+        })
     }
 }

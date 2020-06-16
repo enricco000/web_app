@@ -224,7 +224,7 @@ export default {
   async mounted () {
     const postId = this.$store.state.route.params.postId
     this.post = (await EntriesService.show(postId)).data
-    this.post.date = this.post.createdAt.substring(0 ,19)
+    this.post.date = this.post.createdAt.substring(0, 19)
     this.bookmarked = this.$store.state.route.params.bookmarked
   },
   computed: {

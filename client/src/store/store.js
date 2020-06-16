@@ -48,5 +48,13 @@ export default new Vuex.Store({
       commit('setUser', null)
       commit('setToken', null)
     }
+  },
+  getters: {
+    isUserLoggedin (state) {
+      return state.isUserLoggedin
+    },
+    user (state) {
+      return state.user
+    }
   }
 })

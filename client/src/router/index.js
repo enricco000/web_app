@@ -8,6 +8,7 @@ import CreateContent from '@/components/CreateContent'
 import EditContent from '@/components/EditContent'
 import Settings from '@/components/Settings'
 import Shop from '@/components/Shop'
+import BookmarkedEntries from '@/components/BookmarkedEntries'
 import NotFound from '@/components/NotFound'
 import store from '@/store/store'
 
@@ -65,6 +66,11 @@ const router = new Router({
       path: '/shop',
       name: 'shop',
       component: Shop
+    },
+    {
+      path: '/bookmarks',
+      name: 'bookmarks',
+      component: BookmarkedEntries
     },
     { 
       path: '/notfound',

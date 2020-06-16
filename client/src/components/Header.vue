@@ -173,7 +173,8 @@ export default {
         { title: 'Home', icon: 'mdi-duck', showOnLogin: false, hideOnLogin: false, to: '/', show: true },
         { title: 'Shop', icon: 'mdi-storefront', showOnLogin: false, hideOnLogin: false, to: '/shop', show: true },
         { title: 'Create Account', icon: 'mdi-account-plus', showOnLogin: false, hideOnLogin: true, to: '/register', show: true },
-        { title: 'Log in', icon: 'mdi-login', showOnLogin: false, hideOnLogin: true, to: '/login', show: true }
+        { title: 'Log in', icon: 'mdi-login', showOnLogin: false, hideOnLogin: true, to: '/login', show: true },
+        { title: 'Bookmarks', icon: 'mdi-bookmark-multiple', showOnLogin: true, hideOnLogin: false, to: '/bookmarks', show: false }
       ],
       bottomItems: [
         { title: 'Settings', icon: 'mdi-cog', action: this.navigateToSettings },

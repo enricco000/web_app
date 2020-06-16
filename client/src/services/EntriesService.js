@@ -16,5 +16,5 @@ export default {
   },
   put (entry) {
     return Api().put(`/entries/${entry.id}`, entry)
-  }
+  },
 }

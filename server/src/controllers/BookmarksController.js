@@ -1,9 +1,11 @@
-const {Bookmark} = require('../models')
+const {Bookmark, Entry} = require('../models')
+const _ = require('lodash')
 
 module.exports = {
     async index (req, res) {
         try {
-            const {entryId, userId} = req.query
+            const userId = req.user.id
+            const {entryId} = req.query
                 const bookmark = await Bookmark.findOne({
                     where: {
                         EntryId: entryId,
@@ -23,19 +25,23 @@ module.exports = {
     },
     async post (req, res) {
         try {
-            const bookmark = req.body.params
+            const UserId = req.user.id
+            const {EntryId} = req.body.params
             const exists = await Bookmark.findOne({
                 where: {
-                    EntryId: bookmark.EntryId,
-                    UserId: bookmark.UserId
+                    EntryId: EntryId,
+                    UserId: UserId
                 }
             })
             if (exists) {
-                return res.status(400).send({
+                res.status(400).send({
                     error: 'This entry is already bookmarked'
                 })
             }
-            const created = await Bookmark.create(bookmark)
+            const created = await Bookmark.create({
+                UserId: UserId,
+                EntryId: EntryId
+            })
             res.send(created)
         } catch (err) {
             res.status(500).send({
@@ -45,7 +51,8 @@ module.exports = {
     },
     async delete (req, res) {
         try {
-            const {UserId, EntryId} = req.query
+            const UserId = req.user.id
+            const {EntryId} = req.query
             const exists = await Bookmark.findOne({
                 where: {
                     UserId: UserId,
@@ -53,7 +60,7 @@ module.exports = {
                 }
             })
             if (!exists) {
-                return res.status(400).send({
+                res.status(400).send({
                     error: 'This entry was not bookmarked'
                 })
             }
@@ -69,6 +76,30 @@ module.exports = {
         } catch (err) {
             res.status(500).send({
                 error: 'An error has occured while deleting the bookmark'
+            })
+        }
+    },
+    async indexer (req, res) {
+        try {
+            const UserId = req.user.id
+            const bookmarks = await Bookmark.findAll({
+                where: {
+                    UserId: UserId
+                },
+                include: [
+                    {
+                        model: Entry
+                    }
+                ]
+            })
+                .map(bookmarks => bookmarks.toJSON())
+                .map(bookmarks => _.extend({
+                    bookmarkId: bookmarks.id
+                }, bookmarks.Entry))
+                res.send(bookmarks)
+        } catch (err) {
+            res.status(500).send({
+                error: 'An error occured while fetching bookmarks'
             })
         }
     }
